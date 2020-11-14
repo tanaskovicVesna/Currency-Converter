@@ -6,9 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import com.vesna.mvvmkotlin.R
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -35,11 +33,18 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        resultText.text = viewModel.getResult().toString()
+     //  resultText.text = viewModel.getResult().toString()
+
+        val resultObserver = Observer<Float>{result  -> resultText.text = result.toString()+"€" }
+
+        viewModel.getResult().observe(this.viewLifecycleOwner, resultObserver)
+
         convertButton.setOnClickListener {
             if (dollarText.text.isNotEmpty()){
+
                 viewModel.setAmount(dollarText.text.toString())
-                resultText.text = viewModel.getResult().toString()
+
+             //   resultText.text = viewModel.getResult().toString()
             }else{
                 resultText.text = getString(R.string.no_value)
             }
